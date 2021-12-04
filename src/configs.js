@@ -20,7 +20,7 @@ export const winTypes = {
 export const player1Colors = [
   {
     value: "#C61624",
-    label: "red",
+    label: "Red",
   },
   {
     value: "#3BC616",
@@ -28,21 +28,21 @@ export const player1Colors = [
   },
   {
     value: "#1649C6",
-    label: "blue",
+    label: "Blue",
   },
 ];
 
 export const player2Colors = [
   {
     value: "#C66B16",
-    label: "orange",
+    label: "Orange",
   },
   {
     value: "#CB1C89",
-    label: "pink",
+    label: "Pink",
   },
   {
     value: "#F1E70E",
-    label: "yellow",
+    label: "Yellow",
   },
 ];

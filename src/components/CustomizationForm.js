@@ -29,8 +29,11 @@ export const CustomizationForm = ({ setBoardSettings }) => {
       p2: playerName2,
     };
 
-  
-    const updatedBoardSettings = { ...boardSettings, colors: colors, playerNames: playerNames };
+    const updatedBoardSettings = {
+      ...boardSettings,
+      colors: colors,
+      playerNames: playerNames,
+    };
     setBoardSettings(updatedBoardSettings);
   };
   return (
@@ -75,6 +78,7 @@ export const CustomizationForm = ({ setBoardSettings }) => {
               id="player-color-1"
               onChange={(e) => setPlayerColor1(e.target.value)}
             >
+              <option value="">Select...</option>
               {player1Colors.map((currentColor) => (
                 <option value={currentColor.value}>{currentColor.label}</option>
               ))}
@@ -90,6 +94,7 @@ export const CustomizationForm = ({ setBoardSettings }) => {
               id="player-color-2"
               onChange={(e) => setPlayerColor2(e.target.value)}
             >
+              <option value="">Select...</option>
               {player2Colors.map((currentColor) => (
                 <option value={currentColor.value}>{currentColor.label}</option>
               ))}

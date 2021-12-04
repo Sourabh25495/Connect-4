@@ -16,8 +16,7 @@ function getFirstPlayerTurn(boardSettings) {
   return boardSettings.colors.p1;
 }
 
-export const Connect4 = ({boardSettings}) => {
-  console.log("Test", boardSettings)
+export const Connect4 = ({boardSettings, setShowGame}) => {
   const [board, setBoard] = useState(createBoard(boardSettings));
   const [currentPlayer, setCurrentPlayer] = useState(getFirstPlayerTurn(boardSettings));
   const [win, setWin] = useState(null);
@@ -40,7 +39,10 @@ export const Connect4 = ({boardSettings}) => {
         let cell = getBoardCell(
           getIndex(currentCell.row, currentCell.column, boardSettings)
         );
-        cell.style.backgroundColor = isOn ? winner : empty;
+        if(cell?.style) {
+          cell.style.backgroundColor = isOn ? winner : empty;
+        }
+
       }
       setFlashTimer(
         setTimeout(
@@ -51,7 +53,7 @@ export const Connect4 = ({boardSettings}) => {
     }
 
     flashWinningCells(false);
-  }, [win, setFlashTimer]);
+  }, [win, setFlashTimer, boardSettings]);
 
   /**
    * Clears the end game animation timeout when game is restarted.
@@ -114,7 +116,8 @@ export const Connect4 = ({boardSettings}) => {
     };
 
     setWin(isWin());
-  }, [board, dropping, win]);
+  }, [board, dropping, win, boardSettings]);
+
   async function handleUserMove(column) {
     if (dropping || win) return;
     const row = getFirstEmptyRow(column); // finds the first empty row
@@ -220,7 +223,7 @@ export const Connect4 = ({boardSettings}) => {
               : boardSettings.playerNames.p2}{" "}
             WON!
           </h1>
-          <button>Play Again</button>
+          <button onClick={() => setShowGame(false)}>Restart</button>
           <br />
           <br />
 					</>
