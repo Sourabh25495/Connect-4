@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { boardSettings, winTypes } from "../configs";
+import { winTypes } from "../configs";
 import {
   createBoard,
   getIndex,
@@ -10,14 +10,16 @@ import {
   isVerticalWin,
   isHorizontalWin,
 } from "../utils";
+import "../styles.css"
 
-function getFirstPlayerTurn() {
+function getFirstPlayerTurn(boardSettings) {
   return boardSettings.colors.p1;
 }
 
-export const Connect4 = () => {
+export const Connect4 = ({boardSettings}) => {
+  console.log("Test", boardSettings)
   const [board, setBoard] = useState(createBoard(boardSettings));
-  const [currentPlayer, setCurrentPlayer] = useState(getFirstPlayerTurn());
+  const [currentPlayer, setCurrentPlayer] = useState(getFirstPlayerTurn(boardSettings));
   const [win, setWin] = useState(null);
   const [flashTimer, setFlashTimer] = useState(null);
   const [dropping, setDropping] = useState(false);
@@ -206,16 +208,16 @@ export const Connect4 = () => {
         {!win ? (
           <h2 style={{ color: currentPlayer }}>
             {currentPlayer === boardSettings.colors.p1
-              ? "Player 1"
-              : "Player 2"}
+              ? boardSettings.playerNames.p1
+              : boardSettings.playerNames.p2}
           </h2>
         ) : (
 					<>
 					  <h1 style={{ color: win.winner }}>
             {" "}
             {win.winner === boardSettings.colors.p1
-              ? "Player 1"
-              : "Player 2"}{" "}
+              ? boardSettings.playerNames.p1
+              : boardSettings.playerNames.p2}{" "}
             WON!
           </h1>
           <button>Play Again</button>
