@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <>
       <h1>Connect Four Game</h1>
-      <h2>With React</h2>
+      <h2>Welcome!</h2>
     </>
   );
 };
