@@ -4,30 +4,37 @@ export function getIndex(row, column, boardSettings) {
     return index;
   }
 
+  // Create the play board
   export function createBoard(boardSettings) {
     return new Array(boardSettings.rows * boardSettings.columns).fill(
       boardSettings.colors.empty
     );
   }
 
+
+  //Get the first cell of the winning position
   export function getRowAndColumn(index, boardSettings) {
     if (index > boardSettings.rows * boardSettings.colums) return null;
     const row = Math.floor(index / boardSettings.columns);
     const column = Math.floor(index % boardSettings.columns);
+    console.log("TESTT", row, column)
     return {
       row,
       column
     };
   }
 
+  //creat grid columns
   export function getGridCols(boardSettings) {
     let gridTemplateColumns = "";
     for (let i = 0; i < boardSettings.columns; i++) {
       gridTemplateColumns += "auto ";
     }
+    console.log(gridTemplateColumns)
     return gridTemplateColumns;
   }
 
+// Check for horizontal win
   export function isHorizontalWin(boardSettings, createWinState, board, winTypes) {
     const { rows } = boardSettings;
     const { columns } = boardSettings;
@@ -47,6 +54,8 @@ export function getIndex(row, column, boardSettings) {
       }
     }
   }
+
+  // Check for vertical win
   export function isVerticalWin(boardSettings, createWinState,  board, winTypes) {
     const { rows } = boardSettings;
     const { columns } = boardSettings;
@@ -66,6 +75,8 @@ export function getIndex(row, column, boardSettings) {
       }
     }
   }
+
+  // Check for diagonal win - backwards
   export function isBackwardsDiagonalWin(boardSettings, createWinState,  board, winTypes) {
     const { rows } = boardSettings;
     const { columns } = boardSettings;
@@ -85,6 +96,8 @@ export function getIndex(row, column, boardSettings) {
       }
     }
   }
+
+   // Check for diagonal win - forward
   export function isForwardsDiagonalWin(boardSettings, createWinState,  board, winTypes) {
     const { rows } = boardSettings;
     const { columns } = boardSettings;

@@ -100,8 +100,11 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
       }
     }
 
+    //Track win conditions to detect if 4 are connected
     const isWin = () => {
       return (
+        isHorizontalWin(boardSettings, createWinState, board, winTypes) ||
+        isVerticalWin(boardSettings, createWinState, board, winTypes) ||
         isForwardsDiagonalWin(boardSettings, createWinState, board, winTypes) ||
         isBackwardsDiagonalWin(
           boardSettings,
@@ -109,8 +112,6 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
           board,
           winTypes
         ) ||
-        isHorizontalWin(boardSettings, createWinState, board, winTypes) ||
-        isVerticalWin(boardSettings, createWinState, board, winTypes) ||
         null
       );
     };
@@ -119,11 +120,15 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
   }, [board, dropping, win, boardSettings]);
 
   async function handleUserMove(column) {
-    if (dropping || win) return;
+    if (dropping || win) {
+      return
+    };
     const row = getFirstEmptyRow(column); // finds the first empty row
-    if (row < 0) return;
+    if (row < 0) {
+      return
+    }
     setDropping(true);
-    await animateDrop(row, column, currentPlayer);
+    await animateCellDrop(row, column, currentPlayer);
     setDropping(false);
     const newBoard = board.slice();
     newBoard[getIndex(row, column, boardSettings)] = currentPlayer;
@@ -136,7 +141,7 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
     );
   }
 
-  function animateDrop(row, column, color, currentRow) {
+  function animateCellDrop(row, column, color, currentRow) {
     if (currentRow === undefined) {
       currentRow = 0;
     }
@@ -151,7 +156,7 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
       let c = getBoardCell(getIndex(currentRow, column, boardSettings));
       c.style.backgroundColor = color;
       setTimeout(
-        () => resolve(animateDrop(row, column, color, ++currentRow)),
+        () => resolve(animateCellDrop(row, column, color, ++currentRow)),
         boardSettings.dropAnimationRate
       );
     });
@@ -178,10 +183,10 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
   }
 
   const getDroppingButtons = () => {
-    const btn = [];
+    const cellBtn = [];
 
     for (let i = 0; i < boardSettings.columns; i++) {
-      btn.push(
+      cellBtn.push(
         <button
           key={i}
           onClick={() => handleUserMove(i)}
@@ -191,8 +196,7 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
         />
       );
     }
-
-    return btn;
+    return cellBtn;
   };
 
   const getCells = board.map((c, i) => (
