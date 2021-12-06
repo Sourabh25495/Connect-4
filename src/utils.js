@@ -17,7 +17,6 @@ export function getIndex(row, column, boardSettings) {
     if (index > boardSettings.rows * boardSettings.colums) return null;
     const row = Math.floor(index / boardSettings.columns);
     const column = Math.floor(index % boardSettings.columns);
-    console.log("TESTT", row, column)
     return {
       row,
       column
@@ -30,7 +29,6 @@ export function getIndex(row, column, boardSettings) {
     for (let i = 0; i < boardSettings.columns; i++) {
       gridTemplateColumns += "auto ";
     }
-    console.log(gridTemplateColumns)
     return gridTemplateColumns;
   }
 
