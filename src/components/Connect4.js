@@ -11,9 +11,25 @@ import {
   isHorizontalWin,
 } from "../utils";
 import "../styles.css"
+import {CurrentPlayer} from "./CurrentPlayer";
+import {GetCells, getDroppingButtons} from "./Cells"
 
 function getFirstPlayerTurn(boardSettings) {
   return boardSettings.colors.p1;
+}
+
+function traverseWinCells(winType, position) {
+  if (winType === winTypes.horizontal) {
+    position.column++;
+  } else if (winType === winTypes.vertical) {
+    position.row++;
+  } else if (winType === winTypes.backwardsDiagonal) {
+    position.row++;
+    position.column++;
+  } else if (winType === winTypes.forwardsDiagonal) {
+    position.row++;
+    position.column--;
+  }
 }
 
 export const Connect4 = ({boardSettings, setShowGame}) => {
@@ -23,6 +39,15 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
   const [flashTimer, setFlashTimer] = useState(null);
   const [dropping, setDropping] = useState(false);
   const domBoard = useRef(null);
+
+
+  function getBoardCell(index) {
+    // console.log(index)
+    if (!domBoard.current) return;
+    const board = domBoard.current;
+    const blocks = board.querySelectorAll(".board-block");
+    return blocks[index];
+  }
 
   /**
    * End game animation.
@@ -83,17 +108,7 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
           board[getIndex(position.row, position.column, boardSettings)];
         if (currentCell === win.winner) {
           win.winningCells.push({ ...position });
-          if (winType === winTypes.horizontal) {
-            position.column++;
-          } else if (winType === winTypes.vertical) {
-            position.row++;
-          } else if (winType === winTypes.backwardsDiagonal) {
-            position.row++;
-            position.column++;
-          } else if (winType === winTypes.forwardsDiagonal) {
-            position.row++;
-            position.column--;
-          }
+          traverseWinCells(winType, position)
         } else {
           return win;
         }
@@ -150,11 +165,11 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
         return resolve();
       }
       if (currentRow > 0) {
-        let c = getBoardCell(getIndex(currentRow - 1, column, boardSettings));
-        c.style.backgroundColor = boardSettings.colors.empty;
+        let cell = getBoardCell(getIndex(currentRow - 1, column, boardSettings));
+        cell.style.backgroundColor = boardSettings.colors.empty;
       }
-      let c = getBoardCell(getIndex(currentRow, column, boardSettings));
-      c.style.backgroundColor = color;
+      let cell = getBoardCell(getIndex(currentRow, column, boardSettings));
+      cell.style.backgroundColor = color;
       setTimeout(
         () => resolve(animateCellDrop(row, column, color, ++currentRow)),
         boardSettings.dropAnimationRate
@@ -174,67 +189,6 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
     return rows - 1;
   }
 
-  function getBoardCell(index) {
-    // console.log(index)
-    if (!domBoard.current) return;
-    const board = domBoard.current;
-    const blocks = board.querySelectorAll(".board-block");
-    return blocks[index];
-  }
-
-  const getDroppingButtons = () => {
-    const cellBtn = [];
-
-    for (let i = 0; i < boardSettings.columns; i++) {
-      cellBtn.push(
-        <button
-          key={i}
-          onClick={() => handleUserMove(i)}
-          style={{
-            backgroundColor: currentPlayer,
-          }}
-        />
-      );
-    }
-    return cellBtn;
-  };
-
-  const getCells = board.map((c, i) => (
-    <button
-      key={"c" + i}
-      className="cell board-block"
-      style={{
-        backgroundColor: "none",
-      }}
-    />
-  ));
-
-  const CurrentPlayer = () => {
-    return (
-      <>
-        {!win ? (
-          <h2 style={{ color: currentPlayer }}>
-            {currentPlayer === boardSettings.colors.p1
-              ? boardSettings.playerNames.p1
-              : boardSettings.playerNames.p2}
-          </h2>
-        ) : (
-					<>
-					  <h1 style={{ color: win.winner }}>
-            {" "}
-            {win.winner === boardSettings.colors.p1
-              ? boardSettings.playerNames.p1
-              : boardSettings.playerNames.p2}{" "}
-            WON!
-          </h1>
-          <button onClick={() => setShowGame(false)}>Restart</button>
-          <br />
-          <br />
-					</>
-				)}
-      </>
-    );
-  };
 
   return (
     <>
@@ -246,11 +200,18 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
         ref={domBoard}
         style={{ gridTemplateColumns: getGridCols(boardSettings) }}
       >
-        {getDroppingButtons()}
-        {getCells}
+        {getDroppingButtons(boardSettings, currentPlayer, handleUserMove)}
+        <GetCells 
+        board={board}
+        />
       </div>
       {/* Display current players turn */}
-      <CurrentPlayer />
+      <CurrentPlayer 
+        boardSettings={boardSettings}
+        currentPlayer={currentPlayer}
+        win={win}
+        setShowGame={setShowGame}
+      />
     </>
   );
 };
