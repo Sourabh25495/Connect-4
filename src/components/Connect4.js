@@ -79,9 +79,9 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
       const position = getRowAndColumn(start, boardSettings);
 
       while (true) {
-        const current =
+        const currentCell =
           board[getIndex(position.row, position.column, boardSettings)];
-        if (current === win.winner) {
+        if (currentCell === win.winner) {
           win.winningCells.push({ ...position });
           if (winType === winTypes.horizontal) {
             position.column++;
