@@ -133,7 +133,6 @@ export function isForwardsDiagonalWin(
   }
 }
 
-
 export function getFirstPlayerTurn(boardSettings) {
   return boardSettings.colors.p1;
 }

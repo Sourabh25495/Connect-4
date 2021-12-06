@@ -10,7 +10,7 @@ import {
   isVerticalWin,
   isHorizontalWin,
   getFirstPlayerTurn,
-  traverseWinCells
+  traverseWinCells,
 } from "../utils";
 import "../styles.css";
 import { CurrentPlayer } from "./CurrentPlayer";
