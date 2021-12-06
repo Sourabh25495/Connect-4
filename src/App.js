@@ -6,7 +6,7 @@ import { CustomizationForm } from "./components/CustomizationForm";
 const Header = () => {
   return (
     <>
-      <h1>Connect Four Game</h1>
+      <h1>Connect 4 Game</h1>
       <h2>Welcome!</h2>
     </>
   );
