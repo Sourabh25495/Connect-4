@@ -132,3 +132,22 @@ export function isForwardsDiagonalWin(
     }
   }
 }
+
+
+export function getFirstPlayerTurn(boardSettings) {
+  return boardSettings.colors.p1;
+}
+
+export function traverseWinCells(winType, position, winTypes) {
+  if (winType === winTypes.horizontal) {
+    position.column++;
+  } else if (winType === winTypes.vertical) {
+    position.row++;
+  } else if (winType === winTypes.backwardsDiagonal) {
+    position.row++;
+    position.column++;
+  } else if (winType === winTypes.forwardsDiagonal) {
+    position.row++;
+    position.column--;
+  }
+}

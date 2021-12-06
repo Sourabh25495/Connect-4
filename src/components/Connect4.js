@@ -9,37 +9,22 @@ import {
   isForwardsDiagonalWin,
   isVerticalWin,
   isHorizontalWin,
+  getFirstPlayerTurn,
+  traverseWinCells
 } from "../utils";
-import "../styles.css"
-import {CurrentPlayer} from "./CurrentPlayer";
-import {GetCells, getDroppingButtons} from "./Cells"
+import "../styles.css";
+import { CurrentPlayer } from "./CurrentPlayer";
+import { GetCells, getDroppingButtons } from "./Cells";
 
-function getFirstPlayerTurn(boardSettings) {
-  return boardSettings.colors.p1;
-}
-
-function traverseWinCells(winType, position) {
-  if (winType === winTypes.horizontal) {
-    position.column++;
-  } else if (winType === winTypes.vertical) {
-    position.row++;
-  } else if (winType === winTypes.backwardsDiagonal) {
-    position.row++;
-    position.column++;
-  } else if (winType === winTypes.forwardsDiagonal) {
-    position.row++;
-    position.column--;
-  }
-}
-
-export const Connect4 = ({boardSettings, setShowGame}) => {
+export const Connect4 = ({ boardSettings, setShowGame }) => {
   const [board, setBoard] = useState(createBoard(boardSettings));
-  const [currentPlayer, setCurrentPlayer] = useState(getFirstPlayerTurn(boardSettings));
+  const [currentPlayer, setCurrentPlayer] = useState(
+    getFirstPlayerTurn(boardSettings)
+  );
   const [win, setWin] = useState(null);
   const [flashTimer, setFlashTimer] = useState(null);
   const [dropping, setDropping] = useState(false);
   const domBoard = useRef(null);
-
 
   function getBoardCell(index) {
     // console.log(index)
@@ -64,10 +49,9 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
         let cell = getBoardCell(
           getIndex(currentCell.row, currentCell.column, boardSettings)
         );
-        if(cell?.style) {
+        if (cell?.style) {
           cell.style.backgroundColor = isOn ? winner : empty;
         }
-
       }
       setFlashTimer(
         setTimeout(
@@ -108,7 +92,7 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
           board[getIndex(position.row, position.column, boardSettings)];
         if (currentCell === win.winner) {
           win.winningCells.push({ ...position });
-          traverseWinCells(winType, position)
+          traverseWinCells(winType, position, winTypes);
         } else {
           return win;
         }
@@ -136,11 +120,11 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
 
   async function handleUserMove(column) {
     if (dropping || win) {
-      return
-    };
+      return;
+    }
     const row = getFirstEmptyRow(column); // finds the first empty row
     if (row < 0) {
-      return
+      return;
     }
     setDropping(true);
     await animateCellDrop(row, column, currentPlayer);
@@ -165,7 +149,9 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
         return resolve();
       }
       if (currentRow > 0) {
-        let cell = getBoardCell(getIndex(currentRow - 1, column, boardSettings));
+        let cell = getBoardCell(
+          getIndex(currentRow - 1, column, boardSettings)
+        );
         cell.style.backgroundColor = boardSettings.colors.empty;
       }
       let cell = getBoardCell(getIndex(currentRow, column, boardSettings));
@@ -189,7 +175,6 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
     return rows - 1;
   }
 
-
   return (
     <>
       {/* Creates a board */}
@@ -201,12 +186,10 @@ export const Connect4 = ({boardSettings, setShowGame}) => {
         style={{ gridTemplateColumns: getGridCols(boardSettings) }}
       >
         {getDroppingButtons(boardSettings, currentPlayer, handleUserMove)}
-        <GetCells 
-        board={board}
-        />
+        <GetCells board={board} />
       </div>
       {/* Display current players turn */}
-      <CurrentPlayer 
+      <CurrentPlayer
         boardSettings={boardSettings}
         currentPlayer={currentPlayer}
         win={win}
